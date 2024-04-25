@@ -2,12 +2,16 @@
   <div class="container">
     <div class="row mt-5">
       <div class="col-md-6 ml-3">
-        <button disabled type="button" class="btn btn-primary py-2 px-5">
-          Icono
+        <button disabled type="button" class="btn py-3 px-5">
+          <font-awesome-icon icon="coins" />
         </button>
       </div>
       <div class="col-md-6 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary py-2 px-5">
+        <button
+          type="button"
+          class="btn btn-primary py-3 px-5"
+          @click.prevent="openModal('#create_count')"
+        >
           Agregar cuenta
         </button>
       </div>
@@ -32,28 +36,16 @@
             <td>@mdo</td>
             <td>@mdo</td>
             <td>@mdo</td>
-            <td class="d-flex">
-              <a href="#">
+            <td class="d-flex justify-content-around">
+              <a
+                type="button"
+                class="size-icon"
+                @click.prevent="openModal('#edit_count')"
+              >
                 <font-awesome-icon icon="edit" />
               </a>
 
-              <a href="#">
-                <font-awesome-icon icon="trash-alt" />
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>@fat</td>
-            <td>@fat</td>
-            <td class="d-flex">
-              <a href="#">
-                <font-awesome-icon icon="edit" />
-              </a>
-
-              <a href="#">
+              <a class="size-icon">
                 <font-awesome-icon icon="trash-alt" />
               </a>
             </td>
@@ -61,9 +53,38 @@
         </tbody>
       </table>
     </div>
+
+   
   </div>
 </template>
 
-<script setup></script>
+<script>
+import $ from 'jquery';
 
-<style scoped></style>
+export default {
+  components: {},
+
+  data() {
+    return {
+      modalOpen: false,
+    };
+  },
+
+  methods: {
+  
+    openModal(id) {
+      $(id).modal({
+        escapeClose: false,
+        clickClose: false,
+        showClose: false
+      });
+    }
+  },
+};
+</script>
+
+<style scoped>
+.size-icon {
+  font-size: 23px;
+}
+</style>
