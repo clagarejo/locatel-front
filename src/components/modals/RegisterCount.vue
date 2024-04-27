@@ -37,7 +37,7 @@
               </button>
             </div>
 
-            <div class="row" v-if="show_count">
+            <div class="row ml-3" v-if="show_count">
               <div class="col-md-6 mb-3 d-flex flex-column">
                 <label for="" class="mb-2">
                   <strong> Información decuenta </strong>
@@ -101,7 +101,21 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success" @click.prevent="closeModal">Cerrar</button>
+          <button
+            type="submit"
+            class="btn btn-outline-success"
+            @click.prevent="cleanData"
+          >
+            Cerrar
+          </button>
+          <button
+            :disabled="!edit_data.amount"
+            type="submit"
+            class="btn btn-success"
+            @click.prevent="changeInformation"
+          >
+            Aplicar
+          </button>
         </div>
       </div>
     </div>
@@ -118,14 +132,10 @@ export default {
     return {
       account_data: [],
       transactionsType: [],
-
-
       edit_data: {
         typeTransaction: null,
-        amount: null
+        amount: null,
       },
-
-
       show_count: false,
       show_transactions: false,
       account_number: "",
@@ -141,7 +151,6 @@ export default {
           .get(`http://localhost:8000/api/transactions/${id}`)
           .then((response) => {
             this.account_data = response.data;
-            console.log(this.account_data, "data account");
             this.getTransactionsType();
           })
           .catch((error) => {
@@ -155,7 +164,6 @@ export default {
         .get(`http://localhost:8000/api/transactions_type`)
         .then((response) => {
           this.transactionsType = response.data;
-          console.log(this.transactionsType, "tipo de transacciones");
         })
         .catch((error) => {
           console.error("Error al obtener los usuarios:", error);
@@ -166,26 +174,34 @@ export default {
       this.show_transactions = true;
     },
 
-    changeTransaction() {
-      this.closeModal();
-      this.account_data = []
-      this.transactionsType = []
-      this.edit_data.typeTransaction = null
-      this.edit_data.amount = null
-      this.show_count = false
-      this.show_transactions = false
-      this.account_number = ""
-      
-      // axios
-      //   .put(`http://localhost:8000/api/accounts/${id}`, this.edit_data)
-      //   .then((response) => {
-      //     console.log("Total editado correctamente");
+    changeInformation() {
+      axios
+        .put(`http://localhost:8000/api/accounts/${this.account_number}`, this.edit_data)
+        .then((response) => {
+          console.log("Total editado correctamente");
+          this.closeModal();
+          this.account_data = [];
+          this.transactionsType = [];
+          this.edit_data.typeTransaction = null;
+          this.edit_data.amount = null;
+          this.show_count = false;
+          this.show_transactions = false;
+          this.account_number = "";
+        })
+        .catch((error) => {
+          console.error("Error al editar el total:", error);
+        });
+    },
 
-         
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error al editar el total:", error);
-      //   });
+    cleanData() {
+      this.closeModal();
+      this.account_data = [];
+      this.transactionsType = [];
+      this.edit_data.typeTransaction = null;
+      this.edit_data.amount = null;
+      this.show_count = false;
+      this.show_transactions = false;
+      this.account_number = "";
     },
   },
 };

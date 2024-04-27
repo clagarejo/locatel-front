@@ -35,15 +35,15 @@
             <th scope="col">Nombre de usuario</th>
             <th scope="col">Saldo</th>
             <th scope="col">Ultimo movimiento</th>
-            <th scope="col">Acciones</th>
+            <th scope="col" colspan="2">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(account, index) in accounts" :key="index">
-            <td> {{ account.id }} </td>
-            <td> {{ account.user_name }} </td>
-            <td> {{ account.total_amount.toLocaleString() }} </td>
-            <td> {{ account.transaction_type_name }} </td>
+            <td>{{ account.id }}</td>
+            <td>{{ account.user_name }}</td>
+            <td>{{ account.total_amount.toLocaleString() }}</td>
+            <td>{{ account.transaction_type_name }}</td>
 
             <td>
               <a
@@ -78,11 +78,12 @@ export default {
       modalOpen: null,
       accounts: [],
       users: [],
+      account_number: null,
     };
   },
 
   mounted() {
-    this.getAccounts()
+    this.getAccounts();
   },
 
   methods: {
@@ -102,8 +103,7 @@ export default {
         .get("http://localhost:8000/api/users")
         .then((response) => {
           this.users = response.data;
-          console.log(this.users, 'usuarios')
-
+          console.log(this.users, "usuarios");
         })
         .catch((error) => {
           console.error("Error al obtener los usuarios:", error);
@@ -111,19 +111,24 @@ export default {
     },
 
     deleteCount(id) {
-      axios.delete(`http://localhost:8000/api/accounts/${id}`)
-        .then(response => {
-          console.log('Tipos de documentos consultados');
+      axios
+        .delete(`http://localhost:8000/api/accounts/${id}`)
+        .then((response) => {
+          console.log("Tipos de documentos consultados");
           this.getAccounts();
         })
-        .catch(error => {
-          console.error('Error al eliminar usuario:', error);
+        .catch((error) => {
+          console.error("Error al eliminar usuario:", error);
         });
     },
 
     openModal(id) {
-      if(id === "#create_count") {
-        this.getUsers()
+      if (id === "#create_count") {
+        this.getUsers();
+      }
+
+      if (id === "#movements") {
+        this.account_number == id;
       }
       const modalId = id.startsWith("#") ? id.slice(1) : id;
       const modal = document.getElementById(modalId);
@@ -134,7 +139,7 @@ export default {
 
     closeModal() {
       this.modalOpen.hide();
-      this.getAccounts()
+      this.getAccounts();
     },
   },
 };
@@ -144,4 +149,5 @@ export default {
 .button-border {
   border: 2px solid;
 }
+
 </style>

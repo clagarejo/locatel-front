@@ -14,7 +14,7 @@
         </a>
       </div>
 
-      <table class="table">
+      <table class="table text-center">
         <thead>
           <tr>
             <th scope="col">Nombre</th>
@@ -142,6 +142,6 @@ export default {
 
 <style scoped>
 .space-delete {
-  margin-left: -85px;
+  margin-left: -70px;
 }
 </style>
