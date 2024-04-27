@@ -1,0 +1,13 @@
+ul {
+    list-style: none;
+}
+
+.space-buttons {
+    margin-right: 10px;
+}
+
+.size-icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
