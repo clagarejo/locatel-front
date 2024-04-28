@@ -4,11 +4,7 @@
 
     <main class="mt-5 container">
       <div class="space-buttons mt-3">
-        <a
-          type="button"
-          class="btn btn-success py-2 px-5 mb-3"
-          @click.prevent="openModal('#create_user')"
-        >
+        <a type="button" class="btn btn-success py-2 px-5 mb-3" @click.prevent="openModal('#create_user')">
           <font-awesome-icon icon="plus" />
           Crear usuario
         </a>
@@ -31,19 +27,12 @@
             <td>{{ item.phone }}</td>
             <td>{{ item.document }}</td>
             <td>
-              <a
-                type="button"
-                class="size-icon btn btn-success"
-                @click.prevent="openModal('#edit_user', item)"
-              >
+              <a type="button" class="size-icon btn btn-success" @click.prevent="openModal('#edit_user', item)">
                 <font-awesome-icon icon="edit" />
               </a>
             </td>
             <td>
-              <a
-                class="size-icon space-delete btn btn-danger"
-                @click.prevent="deleteUser(item.id)"
-              >
+              <a class="size-icon btn btn-danger" @click.prevent="deleteUser(item.id)">
                 <font-awesome-icon icon="trash-alt" />
               </a>
             </td>
@@ -105,16 +94,41 @@ export default {
     },
 
     deleteUser(id) {
-      axios
-        .delete(`http://localhost:8000/api/users/${id}`)
-        .then((response) => {
-          console.log("Tipos de documentos consultados");
-          this.getUsers();
-        })
-        .catch((error) => {
-          console.error("Error al eliminar usuario:", error);
-        });
+      this.$swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará permanentemente al usuario.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#198754",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`http://localhost:8000/api/users/${id}`)
+            .then((response) => {
+              this.$swal({
+                title: "Éxito",
+                text: response.data.message,
+                icon: "success",
+                confirmButtonText: "¡Genial!",
+              });
+              this.getUsers();
+            })
+            .catch((error) => {
+              const errorMessage = error.response.data.message || "Error al eliminar usuario";
+              this.$swal.fire({
+                title: "Error",
+                text: errorMessage,
+                icon: "error",
+                confirmButtonText: "!Aush!",
+              });
+            });
+        }
+      })
     },
+
 
     openModal(id, data) {
       if (data) {
@@ -141,7 +155,5 @@ export default {
 </script>
 
 <style scoped>
-.space-delete {
-  margin-left: -70px;
-}
+
 </style>

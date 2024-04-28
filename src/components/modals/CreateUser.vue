@@ -43,7 +43,7 @@
                 v-model.trim="data_create.phone"
                 required
                 type="text"
-                placeholder="(+)"
+                placeholder="(+57)"
                 class="form-control"
               />
             </div>
@@ -91,7 +91,13 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn" @click.prevent="closeModal">Cerrar</button>
+          <button
+            type="submit"
+            class="btn btn-outline-success"
+            @click.prevent="closeModal"
+          >
+            Cerrar
+          </button>
           <button type="button" class="btn btn-success" @click.prevent="createUser">
             Crear usuario
           </button>
@@ -115,7 +121,7 @@ export default {
         phone: "",
         address: "",
         document: "",
-        document_type_id: ""
+        document_type_id: "",
       },
     };
   },
@@ -125,18 +131,32 @@ export default {
       axios
         .post("http://localhost:8000/api/users", this.data_create)
         .then((response) => {
-          console.log("Usuario creado correctamente");
-            this.fullname = "";
-            this.email = "";
-            this.phone = "";
-            this.address = "";
-            this.document = "";
-
-            this.closeModal()
+          this.$swal({
+            title: "Success",
+            text: response.data.message,
+            icon: "success",
+            confirmButtonText: "¡Genial!",
+          });
+          this.clearForm();
+          this.closeModal();
         })
         .catch((error) => {
-          console.error("Error al crear usuario:", error);
+          const errorMessage = error.response.data.message || "Error al crear usuario";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
+    },
+
+    clearForm() {
+      this.fullname = "";
+      this.email = "";
+      this.phone = "";
+      this.address = "";
+      this.document = "";
     },
   },
 };

@@ -22,12 +22,8 @@
                 class="form-select"
                 aria-label="Default select example"
               >
-                <option value="" disabled selected> Usuarios... </option>
-                <option
-                  v-for="(option, index) in users"
-                  :key="index"
-                  :value="option.id"
-                >
+                <option value="" disabled selected>Usuarios...</option>
+                <option v-for="(option, index) in users" :key="index" :value="option.id">
                   {{ option.name }}
                 </option>
               </select>
@@ -77,12 +73,23 @@ export default {
       console.log(data, "data");
       axios
         .post(`http://localhost:8000/api/accounts`, this.account_create)
-        .then((resp) => {
-          console.log("Cuenta creada correctamente");
+        .then((response) => {
+          this.$swal({
+            title: "Éxito",
+            text: response.data.message,
+            icon: "success",
+            confirmButtonText: "¡Genial!",
+          });
           this.closeModal();
         })
         .catch((error) => {
-          console.log(error);
+          const errorMessage = error.response.data.message || "Error al crear una cuenta";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
   },

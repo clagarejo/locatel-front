@@ -47,7 +47,7 @@
             <td>
               <a
                 class="size-icon btn btn-danger"
-                @click.prevent="deleteCount(index)"
+                @click.prevent="deleteCount(account.id)"
               >
                 <font-awesome-icon icon="trash-alt" />
               </a>
@@ -110,15 +110,39 @@ export default {
     },
 
     deleteCount(id) {
-      axios
-        .delete(`http://localhost:8000/api/accounts/${id}`)
-        .then((response) => {
-          console.log("Tipos de documentos consultados");
-          this.getAccounts();
-        })
-        .catch((error) => {
-          console.error("Error al eliminar usuario:", error);
-        });
+      this.$swal.fire({
+        title: "¿Estás seguro?",
+        text: "Esta acción eliminará permanentemente la cuenta.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        cancelButtonColor: "#d33",
+        confirmButtonColor: "#198754",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`http://localhost:8000/api/accounts/${id}`)
+            .then((response) => {
+              this.$swal({
+                title: "Éxito",
+                text: response.data.message,
+                icon: "success",
+                confirmButtonText: "¡Genial!",
+              });
+              this.getAccounts();
+            })
+            .catch((error) => {
+              const errorMessage = error.response.data.message || "Error al eliminar usuario";
+              this.$swal.fire({
+                title: "Error",
+                text: errorMessage,
+                icon: "error",
+                confirmButtonText: "!Aush!",
+              });
+            });
+        }
+      })
     },
 
     openModal(id) {

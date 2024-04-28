@@ -101,11 +101,22 @@ export default {
       axios
         .put(`http://localhost:8000/api/users/${userId}`, this.editUser)
         .then((response) => {
-          console.log("Usuario editado correctamente");
-          this.closeModal()
+          this.$swal({
+            title: "Éxito",
+            text: response.data.message,
+            icon: "success",
+            confirmButtonText: "¡Genial!",
+          });
+          this.closeModal();
         })
         .catch((error) => {
-          console.error("Error al editar usuario:", error);
+          const errorMessage = error.response.data.message || "Error al editar el usuario";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
   },

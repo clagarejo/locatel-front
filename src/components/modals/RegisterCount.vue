@@ -183,18 +183,23 @@ export default {
       axios
         .put(`http://localhost:8000/api/accounts/${this.account_number}`, this.edit_data)
         .then((response) => {
-          console.log("Total editado correctamente");
+          this.$swal({
+            title: "Éxito",
+            text: response.data.message,
+            icon: "success",
+            confirmButtonText: "¡Genial!",
+          });
           this.closeModal();
-          this.account_data = [];
-          this.transactionsType = [];
-          this.edit_data.typeTransaction = null;
-          this.edit_data.amount = null;
-          this.show_count = false;
-          this.show_transactions = false;
-          this.account_number = "";
+          this.cleanData()
         })
         .catch((error) => {
-          console.error("Error al editar el total:", error);
+          const errorMessage = error.response.data.message || "Error al crear una cuenta";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
 
