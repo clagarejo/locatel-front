@@ -1,7 +1,26 @@
-# Vue 3 + Vite
+# Prueba Técnica - Backend
+- Este repositorio contiene el código del frontend para la prueba técnica de Locatel.
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Requisitos del Sistema
+    1. Node.js >= 12.x
+    2. npm o Yarn
+    
+### Instalación
+    1. Descarga o clona este repositorio en tu máquina local.
+    2.Abre una terminal y navega hasta la carpeta del proyecto.
+    3. Si tienes npm instalado en tu computadora, puedes ejecutar npm install para instalar las dependencias.
+    4. Si prefieres utilizar Yarn, primero instálalo globalmente en tu sistema con el siguiente comando:
+    npm install --global yarn
+    Luego, ejecuta yarn install para instalar las dependencias.
 
-## Recommended IDE Setup
+### Ejecución del Servidor
+  Una vez instaladas las dependencias, puedes ejecutar el proyecto en un servidor local       
+  utilizando el siguiente comando:
+    1. Con npm.
+      npm run dev
+    2. Con Yarn:
+      yarn dev
+      
+### Backend
+    Para que las funcionalidades se ejecuten correctamente, es necesario ejecutar también el   backend. Puedes encontrar las instrucciones para ejecutar el backend en el siguiente enlace: https://github.com/clagarejo/locatel-api
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (previously Volar) and disable Vetur
