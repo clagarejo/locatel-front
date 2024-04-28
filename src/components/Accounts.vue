@@ -33,7 +33,6 @@
           <tr>
             <th scope="col">Número de cuenta</th>
             <th scope="col">Nombre de usuario</th>
-            <th scope="col">Saldo</th>
             <th scope="col">Ultimo movimiento</th>
             <th scope="col" colspan="2">Acciones</th>
           </tr>
@@ -42,8 +41,8 @@
           <tr v-for="(account, index) in accounts" :key="index">
             <td>{{ account.id }}</td>
             <td>{{ account.user_name }}</td>
-            <td>{{ account.total_amount.toLocaleString() }}</td>
-            <td>{{ account.transaction_type_name }}</td>
+            <td>{{ new Date(account.updated_at).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) }}</td>
+
 
             <td>
               <a

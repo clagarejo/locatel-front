@@ -44,27 +44,31 @@
                 </label>
                 <span>
                   <strong> Nombre de usuario </strong> :
-                  {{ account_data.transaction.name }}
+                  {{ account_data.user.name }}
                 </span>
                 <span>
                   <strong> Saldo </strong> :
-                  {{ account_data.transaction.amount }}
+                  {{ account_data.total_amount }}
                 </span>
                 <span>
                   <strong> Número de cuenta </strong> :
-                  {{ account_data.transaction.id }}
+                  {{ account_data.id }}
                 </span>
                 <span>
                   <strong> Telefono </strong> :
-                  {{ account_data.transaction.phone }}
+                  {{ account_data.user.phone }}
                 </span>
                 <span>
                   <strong> Direccion de usuario </strong> :
-                  {{ account_data.transaction.address }}
+                  {{ account_data.user.address }}
                 </span>
                 <span>
                   <strong> Movimientos </strong> :
-                  {{ account_data.transaction.transaction_type_name }}
+                  <ul>
+                    <li v-for="(transaction, index) in  account_data.transactions" :key="index"> 
+                      {{ transaction.transaction_type.name }} 
+                    </li>
+                  </ul>
                 </span>
               </div>
 
@@ -150,7 +154,8 @@ export default {
         axios
           .get(`http://localhost:8000/api/transactions/${id}`)
           .then((response) => {
-            this.account_data = response.data;
+            console.log(response, 'a ver que')
+            this.account_data = response.data.transaction;
             this.getTransactionsType();
           })
           .catch((error) => {
