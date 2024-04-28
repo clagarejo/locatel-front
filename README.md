@@ -1,11 +1,26 @@
-# PRUEBA TECNICA
+# Prueba Técnica - Backend
+- Este repositorio contiene el código del frontend para la prueba técnica de Locatel.
 
-En este repositorio se encuentra el codigo con respecto al Frontend para la prueba tecnica de Locatel
+## Requisitos del Sistema
+    1. Node.js >= 12.x
+    2. npm o Yarn
+    
+### Instalación
+    1. Descarga o clona este repositorio en tu máquina local.
+    2.Abre una terminal y navega hasta la carpeta del proyecto.
+    3. Si tienes npm instalado en tu computadora, puedes ejecutar npm install para instalar las dependencias.
+    4. Si prefieres utilizar Yarn, primero instálalo globalmente en tu sistema con el siguiente comando:
+    npm install --global yarn
+    Luego, ejecuta yarn install para instalar las dependencias.
 
-## los pasos para ejecutar el proyecto son los siguientes
-  - Descargar o clonar el repositorio
-  - Si tienes npm en tu computadora puedes eliminar el archivo yarn.lock y ejecutare el siguiente codigo: npm install o npm i
-  - Si lo quieres hacer con yarn debes instalar yarn con el siguiente codigo npm install --global yarn, aqui te dejo la documentacion: https://classic.yarnpkg.com/lang/en/docs/install/#windows-stabledesp
-  - despues de instalar el proyecto e instalar las dependencias puedes ejecutar yarn dev o npm run dev para ejecutar el codigo en un servidor local
-  - Para poder ejecutar las funcionalides con satisfaccion debes ejecutar el backend, en el siguiente link encontraras los pasos para ejecutarlo: https://github.com/clagarejo/locatel-api
+### Ejecución del Servidor
+  Una vez instaladas las dependencias, puedes ejecutar el proyecto en un servidor local       
+  utilizando el siguiente comando:
+    1. Con npm.
+      npm run dev
+    2. Con Yarn:
+      yarn dev
+      
+### Backend
+    Para que las funcionalidades se ejecuten correctamente, es necesario ejecutar también el   backend. Puedes encontrar las instrucciones para ejecutar el backend en el siguiente enlace: https://github.com/clagarejo/locatel-api
 
