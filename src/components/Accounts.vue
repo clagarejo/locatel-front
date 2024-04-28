@@ -105,7 +105,13 @@ export default {
           console.log(this.users, "usuarios");
         })
         .catch((error) => {
-          console.error("Error al obtener los usuarios:", error);
+          const errorMessage = error.response.data.message || "Error al obtener los usuarios";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
 

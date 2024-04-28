@@ -132,7 +132,7 @@ export default {
         .post("http://localhost:8000/api/users", this.data_create)
         .then((response) => {
           this.$swal({
-            title: "Success",
+            title: "Exito",
             text: response.data.message,
             icon: "success",
             confirmButtonText: "¡Genial!",

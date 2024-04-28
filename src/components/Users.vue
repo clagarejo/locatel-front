@@ -17,7 +17,7 @@
             <th scope="col">Correo</th>
             <th scope="col">Telefono</th>
             <th scope="col">Documento</th>
-            <th scope="col" colspan="2">Acciones</th>
+            <th scope="col">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -26,12 +26,11 @@
             <td>{{ item.email }}</td>
             <td>{{ item.phone }}</td>
             <td>{{ item.document }}</td>
-            <td>
-              <a type="button" class="size-icon btn btn-success" @click.prevent="openModal('#edit_user', item)">
+            <td class="d-fex">
+              <a type="button" class="size-icon space-button btn btn-success" @click.prevent="openModal('#edit_user', item)">
                 <font-awesome-icon icon="edit" />
               </a>
-            </td>
-            <td>
+
               <a class="size-icon btn btn-danger" @click.prevent="deleteUser(item.id)">
                 <font-awesome-icon icon="trash-alt" />
               </a>
@@ -77,7 +76,13 @@ export default {
           this.users = response.data;
         })
         .catch((error) => {
-          console.error("Error al obtener los usuarios:", error);
+          const errorMessage = error.response.data.message || "Error al obtener los usuarios";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
 
@@ -89,7 +94,13 @@ export default {
           console.log(this.document_types, "tipos de documentos");
         })
         .catch((error) => {
-          console.error("Error al obtener los usuarios:", error);
+          const errorMessage = error.response.data.message || "Error al obtener los tipos de documentos";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
 
@@ -155,5 +166,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .space-button {
+    margin-right: 7px;
+  }
 </style>

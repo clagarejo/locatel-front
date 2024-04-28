@@ -48,7 +48,7 @@
                 </span>
                 <span>
                   <strong> Saldo </strong> :
-                  {{ account_data.total_amount }}
+                  {{ account_data.total_amount.toLocaleString() }}
                 </span>
                 <span>
                   <strong> Número de cuenta </strong> :
@@ -65,8 +65,11 @@
                 <span>
                   <strong> Movimientos </strong> :
                   <ul>
-                    <li v-for="(transaction, index) in  account_data.transactions" :key="index"> 
-                      {{ transaction.transaction_type.name }} 
+                    <li
+                      v-for="(transaction, index) in account_data.transactions"
+                      :key="index"
+                    >
+                      {{ transaction.transaction_type.name }}
                     </li>
                   </ul>
                 </span>
@@ -100,6 +103,10 @@
                   />
                 </div>
               </div>
+            </div>
+
+            <div class="row ml-3 text-center" v-else>
+              <h6>{{ text_information }}</h6>
             </div>
           </div>
         </div>
@@ -143,25 +150,31 @@ export default {
       show_count: false,
       show_transactions: false,
       account_number: "",
+
+      text_information: "",
     };
   },
 
   methods: {
     consultCount(id) {
-      if (this.account_number != "") {
-        this.show_count = true;
-
-        axios
-          .get(`http://localhost:8000/api/transactions/${id}`)
-          .then((response) => {
-            console.log(response, 'a ver que')
+      this.show_count = false
+      axios
+        .get(`http://localhost:8000/api/transactions/${id}`)
+        .then((response) => {
+          if (response.data.transaction) {
+            this.show_count = true;
             this.account_data = response.data.transaction;
             this.getTransactionsType();
-          })
-          .catch((error) => {
-            console.error("Error al obtener los usuarios:", error);
-          });
-      }
+
+          } else {
+            this.show_count = false;
+            this.text_information = "La transacción no se encontró";
+
+          }
+        })
+        .catch((error) => {
+          this.text_information = error.response.data.message;
+        });
     },
 
     getTransactionsType() {
@@ -171,7 +184,13 @@ export default {
           this.transactionsType = response.data;
         })
         .catch((error) => {
-          console.error("Error al obtener los usuarios:", error);
+          const errorMessage = error.response.data.message || "Error al opteber las cuentas";
+          this.$swal.fire({
+            title: "Error",
+            text: errorMessage,
+            icon: "error",
+            confirmButtonText: "!Aush!",
+          });
         });
     },
 
@@ -190,7 +209,7 @@ export default {
             confirmButtonText: "¡Genial!",
           });
           this.closeModal();
-          this.cleanData()
+          this.cleanData();
         })
         .catch((error) => {
           const errorMessage = error.response.data.message || "Error al crear una cuenta";
@@ -212,6 +231,7 @@ export default {
       this.show_count = false;
       this.show_transactions = false;
       this.account_number = "";
+      this.text_information = ''
     },
   },
 };
