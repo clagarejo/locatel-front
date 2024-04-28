@@ -49,7 +49,7 @@
     </main>
 
     <create-user :closeModal="closeModal" :documentTypes="document_types" />
-    <edit-users :closeModal="closeModal" :editUser="data_edit" />
+    <edit-users :closeModal="closeModal" :editUser="data_edit" :documentTypes="document_types" />
   </div>
 </template>
 
@@ -156,6 +156,7 @@ export default {
     openModal(id, data) {
       if (data) {
         this.data_edit = data;
+        console.log(this.data_edit, 'debe venir los tipos')
       }
 
       if (id === "#create_user") {
@@ -177,10 +178,8 @@ export default {
     formatPhoneNumber(phone) {
       if (!phone) return "";
 
-      // Elimina todos los caracteres que no sean dígitos
       const digitsOnly = phone.replace(/\D/g, "");
 
-      // Aplica el formato con espacios
       return digitsOnly.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
     },
   },

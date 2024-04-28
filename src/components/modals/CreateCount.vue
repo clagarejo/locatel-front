@@ -16,7 +16,7 @@
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="" class="mb-2"> Usuarios </label>
+              <label for=""> Usuarios </label>
               <select
                 v-model.trim="account_create.user_id"
                 class="form-select"
@@ -43,7 +43,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn" @click.prevent="closeModal">Cerrar</button>
+          <button type="submit" class="btn btn-outline-success" @click.prevent="cleanForm">Cerrar</button>
           <button type="button" class="btn btn-success" @click.prevent="createCount">
             Crear cuenta
           </button>
@@ -69,28 +69,57 @@ export default {
   },
 
   methods: {
-    createCount(data) {
-      console.log(data, "data");
-      axios
-        .post(`http://localhost:8000/api/accounts`, this.account_create)
-        .then((response) => {
-          this.$swal({
-            title: "Éxito",
-            text: response.data.message,
-            icon: "success",
-            confirmButtonText: "¡Genial!",
+    showWarningAlert(message) {
+      this.$swal({
+        title: "Ups",
+        text: message,
+        icon: "warning",
+        confirmButtonText: "!Ups!",
+      });
+    },
+
+    showSuccessAlert(message) {
+      this.$swal({
+        title: "Éxito",
+        text: message,
+        icon: "success",
+        confirmButtonText: "¡Genial!",
+      });
+    },
+
+    showSuccessError(message) {
+      this.$swal({
+        title: "Éxito",
+        text: message,
+        icon: "success",
+        confirmButtonText: "¡Genial!",
+      });
+    },
+
+    createCount() {
+      if (!this.account_create.user_id) {
+        this.showWarningAlert("El usuario es requerido")
+      } else if (!this.account_create.total_amount) {
+        this.showWarningAlert("El monto total es requerido")
+      } else {
+        axios
+          .post(`http://localhost:8000/api/accounts`, this.account_create)
+          .then((response) => {
+            this.showSuccessAlert(response.data.message);
+            this.closeModal();
+            this.cleanForm()
+          })
+          .catch((error) => {
+            const errorMessage = error.response.data.message || "Error al crear una cuenta";
+            this.showSuccessError(errorMessage)
           });
-          this.closeModal();
-        })
-        .catch((error) => {
-          const errorMessage = error.response.data.message || "Error al crear una cuenta";
-          this.$swal.fire({
-            title: "Error",
-            text: errorMessage,
-            icon: "error",
-            confirmButtonText: "!Aush!",
-          });
-        });
+      }
+    },
+
+    cleanForm() {
+      this.account_create.user_id = null;
+      this.account_create.total_amount = null;
+      this.closeModal();
     },
   },
 };

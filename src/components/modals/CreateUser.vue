@@ -127,28 +127,27 @@ export default {
   },
 
   methods: {
-    createUser() {
-      axios
-        .post("http://localhost:8000/api/users", this.data_create)
-        .then((response) => {
-          this.$swal({
-            title: "Exito",
-            text: response.data.message,
-            icon: "success",
-            confirmButtonText: "¡Genial!",
-          });
-          this.clearForm();
-          this.closeModal();
-        })
-        .catch((error) => {
-          const errorMessage = error.response.data.message || "Error al crear usuario";
-          this.$swal.fire({
-            title: "Error",
-            text: errorMessage,
-            icon: "error",
-            confirmButtonText: "!Aush!",
-          });
-        });
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+
+    showWarningAlert(message) {
+      this.$swal({
+        title: "Ups",
+        text: message,
+        icon: "warning",
+        confirmButtonText: "!Ups!",
+      });
+    },
+
+    showSuccessAlert(message) {
+      this.$swal({
+        title: "Éxito",
+        text: message,
+        icon: "success",
+        confirmButtonText: "¡Genial!",
+      });
     },
 
     clearForm() {
@@ -157,6 +156,36 @@ export default {
       this.phone = "";
       this.address = "";
       this.document = "";
+    },
+
+    createUser() {
+      if (!this.data_create.fullname) {
+        this.showWarningAlert("El nombre del usuario es requerido")
+      } else if (!this.data_create.email) {
+        this.showWarningAlert("El correo es requerido")
+      } else if (!this.isValidEmail(this.data_create.email)) {
+        this.showWarningAlert("Ingresa un email válido")
+      } else if (!this.data_create.phone) {
+        this.showWarningAlert("El número de teléfono es requerido")
+      } else if (!this.data_create.address) {
+        this.showWarningAlert("La dirección es requerida")
+      } else if (!this.data_create.document_type_id) {
+        this.showWarningAlert("El tipo de documento es requerido")
+      } else if (!this.data_create.document) {
+        this.showWarningAlert("El número de documento es requerido")
+      } else {
+        axios
+          .post("http://localhost:8000/api/users", this.data_create)
+          .then((response) => {
+            this.showSuccessAlert(response.data.message);
+            this.clearForm();
+            this.closeModal();
+          })
+          .catch((error) => {
+            const errorMessage = error.response.data.message || "Error al crear usuario";
+            console.error(errorMessage);
+          });
+      }
     },
   },
 };

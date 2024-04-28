@@ -97,27 +97,61 @@ export default {
   },
 
   methods: {
+    isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
+
+    showWarningAlert(message) {
+      this.$swal({
+        title: "Ups",
+        text: message,
+        icon: "warning",
+        confirmButtonText: "!Ups!",
+      });
+    },
+
+    showSuccessAlert(message) {
+      this.$swal({
+        title: "Éxito",
+        text: message,
+        icon: "success",
+        confirmButtonText: "¡Genial!",
+      });
+    },
+
     updateUser(userId) {
-      axios
-        .put(`http://localhost:8000/api/users/${userId}`, this.editUser)
-        .then((response) => {
-          this.$swal({
-            title: "Éxito",
-            text: response.data.message,
-            icon: "success",
-            confirmButtonText: "¡Genial!",
+      const { name, email, phone, address, document } = this.editUser;
+      if (!name) {
+        this.showWarningAlert("El nombre del usuario es requerido");
+      } else if (!email) {
+        this.showWarningAlert("El correo es requerido");
+      } else if (!this.isValidEmail(email)) {
+        this.showWarningAlert("Ingresa un email válido");
+      } else if (!phone) {
+        this.showWarningAlert("El número de teléfono es requerido");
+      } else if (!address) {
+        this.showWarningAlert("La dirección es requerida");
+      } else if (!document) {
+        this.showWarningAlert("El número de documento es requerido");
+      } else {
+        axios
+          .put(`http://localhost:8000/api/users/${userId}`, this.editUser)
+          .then((response) => {
+            this.showSuccessAlert(response.data.message)
+            this.closeModal();
+          })
+          .catch((error) => {
+            const errorMessage =
+              error.response.data.message || "Error al editar el usuario";
+            this.$swal.fire({
+              title: "Error",
+              text: errorMessage,
+              icon: "error",
+              confirmButtonText: "!Aush!",
+            });
           });
-          this.closeModal();
-        })
-        .catch((error) => {
-          const errorMessage = error.response.data.message || "Error al editar el usuario";
-          this.$swal.fire({
-            title: "Error",
-            text: errorMessage,
-            icon: "error",
-            confirmButtonText: "!Aush!",
-          });
-        });
+      }
     },
   },
 };

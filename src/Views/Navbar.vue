@@ -6,10 +6,10 @@
 
     <ul class="navbar-nav d-flex flex-row">
       <li class="nav-item">
-        <router-link to="/" class="nav-link" exact> Usuarios </router-link>
+        <router-link to="/" class="nav-link" exact-active-class="active"> Usuarios </router-link>
       </li>
       <li class="nav-item">
-        <router-link to="/accounts" class="nav-link"> Cuentas </router-link>
+        <router-link to="/accounts" class="nav-link" exact-active-class="active"> Cuentas </router-link>
       </li>
     </ul>
   </div>
@@ -49,7 +49,9 @@
 }
 
 .nav-link.active {
-  background-color: #007bff; 
+  background-color: #2a5c36; 
+  color: #fff;
+  
 }
 
 .logo {
@@ -59,5 +61,4 @@
 .logo img {
   width: 35%;
 }
-
 </style>
