@@ -4,7 +4,11 @@
 
     <main class="mt-5 container">
       <div class="space-buttons mt-3">
-        <a type="button" class="btn btn-success py-2 px-5 mb-3" @click.prevent="openModal('#create_user')">
+        <a
+          type="button"
+          class="btn btn-success py-2 px-5 mb-3"
+          @click.prevent="openModal('#create_user')"
+        >
           <font-awesome-icon icon="plus" />
           Crear usuario
         </a>
@@ -24,10 +28,14 @@
           <tr v-for="(item, index) in users" :key="index">
             <td>{{ item.name }}</td>
             <td>{{ item.email }}</td>
-            <td>{{ item.phone }}</td>
+            <td>{{ formatPhoneNumber(item.phone) }}</td>
             <td>{{ item.document }}</td>
             <td class="d-fex">
-              <a type="button" class="size-icon space-button btn btn-success" @click.prevent="openModal('#edit_user', item)">
+              <a
+                type="button"
+                class="size-icon space-button btn btn-success"
+                @click.prevent="openModal('#edit_user', item)"
+              >
                 <font-awesome-icon icon="edit" />
               </a>
 
@@ -76,7 +84,8 @@ export default {
           this.users = response.data;
         })
         .catch((error) => {
-          const errorMessage = error.response.data.message || "Error al obtener los usuarios";
+          const errorMessage =
+            error.response.data.message || "Error al obtener los usuarios";
           this.$swal.fire({
             title: "Error",
             text: errorMessage,
@@ -94,7 +103,8 @@ export default {
           console.log(this.document_types, "tipos de documentos");
         })
         .catch((error) => {
-          const errorMessage = error.response.data.message || "Error al obtener los tipos de documentos";
+          const errorMessage =
+            error.response.data.message || "Error al obtener los tipos de documentos";
           this.$swal.fire({
             title: "Error",
             text: errorMessage,
@@ -105,41 +115,43 @@ export default {
     },
 
     deleteUser(id) {
-      this.$swal.fire({
-        title: "¿Estás seguro?",
-        text: "Esta acción eliminará permanentemente al usuario.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-        cancelButtonColor: "#d33",
-        confirmButtonColor: "#198754",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios
-            .delete(`http://localhost:8000/api/users/${id}`)
-            .then((response) => {
-              this.$swal({
-                title: "Éxito",
-                text: response.data.message,
-                icon: "success",
-                confirmButtonText: "¡Genial!",
+      this.$swal
+        .fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción eliminará permanentemente al usuario.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar",
+          cancelButtonColor: "#d33",
+          confirmButtonColor: "#198754",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            axios
+              .delete(`http://localhost:8000/api/users/${id}`)
+              .then((response) => {
+                this.$swal({
+                  title: "Éxito",
+                  text: response.data.message,
+                  icon: "success",
+                  confirmButtonText: "¡Genial!",
+                });
+                this.getUsers();
+              })
+              .catch((error) => {
+                const errorMessage =
+                  error.response.data.message || "Error al eliminar usuario";
+                this.$swal.fire({
+                  title: "Error",
+                  text: errorMessage,
+                  icon: "error",
+                  confirmButtonText: "!Aush!",
+                });
               });
-              this.getUsers();
-            })
-            .catch((error) => {
-              const errorMessage = error.response.data.message || "Error al eliminar usuario";
-              this.$swal.fire({
-                title: "Error",
-                text: errorMessage,
-                icon: "error",
-                confirmButtonText: "!Aush!",
-              });
-            });
-        }
-      })
+          }
+        });
     },
-
 
     openModal(id, data) {
       if (data) {
@@ -161,12 +173,22 @@ export default {
       this.modalOpen.hide();
       this.getUsers();
     },
+
+    formatPhoneNumber(phone) {
+      if (!phone) return "";
+
+      // Elimina todos los caracteres que no sean dígitos
+      const digitsOnly = phone.replace(/\D/g, "");
+
+      // Aplica el formato con espacios
+      return digitsOnly.replace(/(\d{3})(\d{3})(\d{4})/, "$1 $2 $3");
+    },
   },
 };
 </script>
 
 <style scoped>
-  .space-button {
-    margin-right: 7px;
-  }
+.space-button {
+  margin-right: 7px;
+}
 </style>
