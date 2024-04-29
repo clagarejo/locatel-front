@@ -48,6 +48,7 @@
       </table>
     </main>
 
+    <loading-spinner :loading="isLoading" />
     <create-user :closeModal="closeModal" :documentTypes="document_types" />
     <edit-users :closeModal="closeModal" :editUser="data_edit" :documentTypes="document_types" />
   </div>
@@ -56,12 +57,14 @@
 <script>
 import { Modal } from "bootstrap";
 import axios from "axios";
+import LoadingSpinner from './LoadingSpinner.vue';
 
 import CreateUser from "./modals/CreateUser.vue";
 import EditUsers from "./modals/EditUsers.vue";
 
+
 export default {
-  components: { CreateUser, EditUsers },
+  components: { CreateUser, EditUsers, LoadingSpinner },
 
   data() {
     return {
@@ -69,6 +72,7 @@ export default {
       users: [],
       data_edit: {},
       document_types: [],
+      isLoading: true
     };
   },
 
@@ -81,6 +85,7 @@ export default {
       axios
         .get("http://localhost:8000/api/users")
         .then((response) => {
+          this.isLoading = false;
           this.users = response.data;
         })
         .catch((error) => {
@@ -128,6 +133,7 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
+            this.isLoading = true
             axios
               .delete(`http://localhost:8000/api/users/${id}`)
               .then((response) => {
@@ -137,6 +143,8 @@ export default {
                   icon: "success",
                   confirmButtonText: "¡Genial!",
                 });
+                this.isLoading = false;
+
                 this.getUsers();
               })
               .catch((error) => {
@@ -148,6 +156,8 @@ export default {
                   icon: "error",
                   confirmButtonText: "!Aush!",
                 });
+                this.isLoading = false;
+
               });
           }
         });

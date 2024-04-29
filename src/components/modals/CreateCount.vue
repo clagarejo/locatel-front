@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content m-modal">
         <div class="modal-header">
           <h5 class="modal-title">Crear cuenta de ahorros</h5>
         </div>
@@ -47,6 +47,7 @@
           <button type="button" class="btn btn-success" @click.prevent="createCount">
             Crear cuenta
           </button>
+          <loading-spinner :loading="isLoading" />
         </div>
       </div>
     </div>
@@ -54,10 +55,14 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+import LoadingSpinner from '../LoadingSpinner.vue'
+
 
 export default {
   props: ["closeModal", "users"],
+
+  components: {LoadingSpinner},
 
   data() {
     return {
@@ -65,6 +70,7 @@ export default {
         user_id: null,
         total_amount: null,
       },
+      isLoading: false
     };
   },
 
@@ -102,16 +108,19 @@ export default {
       } else if (!this.account_create.total_amount) {
         this.showWarningAlert("El monto total es requerido")
       } else {
+        this.isLoading = true
         axios
           .post(`http://localhost:8000/api/accounts`, this.account_create)
           .then((response) => {
             this.showSuccessAlert(response.data.message);
+            this.isLoading = false
             this.closeModal();
             this.cleanForm()
           })
           .catch((error) => {
             const errorMessage = error.response.data.message || "Error al crear una cuenta";
             this.showSuccessError(errorMessage)
+            this.isLoading = false
           });
       }
     },

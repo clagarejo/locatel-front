@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content m-modal ">
         <div class="modal-header">
           <h5 class="modal-title">Crear usuario</h5>
         </div>
@@ -101,6 +101,9 @@
           <button type="button" class="btn btn-success" @click.prevent="createUser">
             Crear usuario
           </button>
+
+          <loading-spinner :loading="isLoading" />
+
         </div>
       </div>
     </div>
@@ -108,10 +111,14 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+import LoadingSpinner from '../LoadingSpinner.vue'
+
 
 export default {
   props: ["closeModal", "documentTypes"],
+
+  components: {LoadingSpinner},
 
   data() {
     return {
@@ -123,6 +130,8 @@ export default {
         document: "",
         document_type_id: "",
       },
+
+      isLoading: false,
     };
   },
 
@@ -174,16 +183,19 @@ export default {
       } else if (!this.data_create.document) {
         this.showWarningAlert("El número de documento es requerido")
       } else {
+        this.isLoading = true
         axios
           .post("http://localhost:8000/api/users", this.data_create)
           .then((response) => {
             this.showSuccessAlert(response.data.message);
+            this.isLoading = false
             this.clearForm();
             this.closeModal();
           })
           .catch((error) => {
             const errorMessage = error.response.data.message || "Error al crear usuario";
             console.error(errorMessage);
+            this.isLoading = false
           });
       }
     },

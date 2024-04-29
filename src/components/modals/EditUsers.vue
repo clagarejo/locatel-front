@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content m-modal ">
         <div class="modal-header">
           <h5 class="modal-title">Editar usuario</h5>
         </div>
@@ -72,7 +72,7 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn" @click.prevent="closeModal">Cerrar</button>
+          <button type="submit" class="btn btn-outline-success" @click.prevent="closeModal">Cerrar</button>
           <button
             type="button"
             class="btn btn-success"
@@ -80,6 +80,7 @@
           >
             Editar
           </button>
+          <loading-spinner :loading="isLoading" />
         </div>
       </div>
     </div>
@@ -88,12 +89,17 @@
 
 <script>
 import axios from "axios";
+import LoadingSpinner from '../LoadingSpinner.vue'
 
 export default {
   props: ["closeModal", "editUser"],
 
+  components: { LoadingSpinner }, 
+
   data() {
-    return {};
+    return {
+      isLoading: false
+    };
   },
 
   methods: {
@@ -135,10 +141,12 @@ export default {
       } else if (!document) {
         this.showWarningAlert("El número de documento es requerido");
       } else {
+        this.isLoading = true;
         axios
           .put(`http://localhost:8000/api/users/${userId}`, this.editUser)
           .then((response) => {
             this.showSuccessAlert(response.data.message)
+            this.isLoading = false;
             this.closeModal();
           })
           .catch((error) => {
@@ -150,6 +158,7 @@ export default {
               icon: "error",
               confirmButtonText: "!Aush!",
             });
+            this.isLoading = false;
           });
       }
     },

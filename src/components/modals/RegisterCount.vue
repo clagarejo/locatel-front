@@ -8,7 +8,7 @@
     aria-hidden="true"
   >
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
+      <div class="modal-content m-modal">
         <div class="modal-header">
           <h5 class="modal-title">Movimientos</h5>
         </div>
@@ -127,6 +127,9 @@
           >
             Aplicar
           </button>
+
+          <loading-spinner :loading="isLoading" />
+
         </div>
       </div>
     </div>
@@ -134,10 +137,14 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios"
+import LoadingSpinner from '../LoadingSpinner.vue'
+
 
 export default {
   props: ["closeModal"],
+
+  components: {LoadingSpinner},
 
   data() {
     return {
@@ -152,27 +159,33 @@ export default {
       account_number: "",
 
       text_information: "",
+      isLoading: false,
     };
   },
 
   methods: {
     consultCount(id) {
-      this.show_count = false
+      this.isLoading = true
       axios
         .get(`http://localhost:8000/api/transactions/${id}`)
         .then((response) => {
           if (response.data.transaction) {
             this.show_count = true;
+            this.isLoading = false
+              
             this.account_data = response.data.transaction;
             this.getTransactionsType();
 
           } else {
             this.show_count = false;
+            this.isLoading = false
+
             this.text_information = "La transacción no se encontró";
 
           }
         })
         .catch((error) => {
+          this.isLoading = false
           this.text_information = error.response.data.message;
         });
     },
@@ -199,6 +212,7 @@ export default {
     },
 
     changeInformation() {
+      this.isLoading = true
       axios
         .put(`http://localhost:8000/api/accounts/${this.account_number}`, this.edit_data)
         .then((response) => {
@@ -208,11 +222,13 @@ export default {
             icon: "success",
             confirmButtonText: "¡Genial!",
           });
+          this.isLoading = false
           this.closeModal();
           this.cleanData();
         })
         .catch((error) => {
           const errorMessage = error.response.data.message || "Error al crear una cuenta";
+          this.isLoading = false
           this.$swal.fire({
             title: "Error",
             text: errorMessage,

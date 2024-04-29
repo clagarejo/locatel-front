@@ -57,6 +57,7 @@
       </table>
     </main>
 
+    <loading-spinner :loading="isLoading" />
     <create-count :closeModal="closeModal" :users="users" />
     <register-count :closeModal="closeModal" />
   </div>
@@ -65,12 +66,14 @@
 <script>
 import { Modal } from "bootstrap";
 import axios from "axios";
+import LoadingSpinner from './LoadingSpinner.vue';
+
 
 import CreateCount from "./modals/CreateCount.vue";
 import RegisterCount from "./modals/RegisterCount.vue";
 
 export default {
-  components: { CreateCount, RegisterCount },
+  components: { CreateCount, RegisterCount, LoadingSpinner },
 
   data() {
     return {
@@ -78,6 +81,7 @@ export default {
       accounts: [],
       users: [],
       account_number: null,
+      isLoading: true
     };
   },
 
@@ -91,6 +95,7 @@ export default {
         .get("http://localhost:8000/api/accounts")
         .then((response) => {
           this.accounts = response.data;
+          this.isLoading = false
         })
         .catch((error) => {
           console.error("Error al obtener los usuarios:", error);
@@ -115,7 +120,7 @@ export default {
         });
     },
 
-    deleteCount(id) {
+    deleteCount(id) { 
       this.$swal.fire({
         title: "¿Estás seguro?",
         text: "Esta acción eliminará permanentemente la cuenta.",
@@ -127,6 +132,7 @@ export default {
         confirmButtonColor: "#198754",
       }).then((result) => {
         if (result.isConfirmed) {
+          this.isLoading = true
           axios
             .delete(`http://localhost:8000/api/accounts/${id}`)
             .then((response) => {
@@ -136,6 +142,7 @@ export default {
                 icon: "success",
                 confirmButtonText: "¡Genial!",
               });
+              this.isLoading = false
               this.getAccounts();
             })
             .catch((error) => {
@@ -146,6 +153,7 @@ export default {
                 icon: "error",
                 confirmButtonText: "!Aush!",
               });
+              this.isLoading = false
             });
         }
       })
