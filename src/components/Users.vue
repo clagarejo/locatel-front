@@ -105,7 +105,6 @@ export default {
         .get("http://localhost:8000/api/documents")
         .then((response) => {
           this.document_types = response.data;
-          console.log(this.document_types, "tipos de documentos");
         })
         .catch((error) => {
           const errorMessage =
@@ -166,7 +165,6 @@ export default {
     openModal(id, data) {
       if (data) {
         this.data_edit = data;
-        console.log(this.data_edit, 'debe venir los tipos')
       }
 
       if (id === "#create_user") {

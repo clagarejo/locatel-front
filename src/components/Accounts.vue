@@ -107,7 +107,6 @@ export default {
         .get("http://localhost:8000/api/users")
         .then((response) => {
           this.users = response.data;
-          console.log(this.users, "usuarios");
         })
         .catch((error) => {
           const errorMessage = error.response.data.message || "Error al obtener los usuarios";
