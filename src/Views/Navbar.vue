@@ -1,7 +1,9 @@
 <template>
   <div class="navbar">
     <router-link class="logo" to=""> 
-     <img src="../assets/locatel.webp" alt="Logo">
+     <!-- <img src="../assets/locatel.webp" alt="Logo"> -->
+     <font-awesome-icon icon="user" />
+
     </router-link>
 
     <ul class="navbar-nav d-flex flex-row">
@@ -51,11 +53,12 @@
 .nav-link.active {
   background-color: #2a5c36; 
   color: #fff;
-  
 }
 
 .logo {
   margin-left: 3%;
+  color: #fff;
+  font-size: 1.3rem;
 }
 
 .logo img {
